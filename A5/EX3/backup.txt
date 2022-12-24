@@ -1,0 +1,143 @@
+package metier;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
+
+public class MetierProduitImpl  implements IMetier<Produit>  {
+
+    ArrayList<Produit> produits = new ArrayList<>();
+    static String nomFichier = "produits.dat";
+
+    public Produit add(Produit p) {
+        if (!produits.contains(p)) {
+            produits.add(p);
+            return p;
+        } else
+            return null;
+    }
+
+    public List<Produit> getAll() throws IOException, ClassNotFoundException,EOFException {
+
+        File f2 = new File(nomFichier);
+        if (!f2.exists()) {
+            f2.createNewFile();
+            return null;
+        }
+        if (f2.length() == 0) {
+            System.out.println("Il y a pas de produits dans le fichier veuillez les ajouter dans le choix 3");
+            return null;
+        }
+        FileInputStream fis = new FileInputStream(f2);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+
+        for (Produit p:produits) {
+            p = (Produit) ois.readObject();
+            System.out.println(p);
+
+        }
+        ois.close();
+        fis.close();
+
+
+        /*boolean found = true;
+        while (found) {
+
+            Object obj = null;
+            if (fis.available() != 0) {
+                obj = ois.readObject();
+                produits.add((Produit) obj);
+            } else {
+                found = false;
+            }
+
+        }
+*/
+        //System.out.println(produits);
+
+        return produits;
+        /*File f2 = new File(nomFichier);
+        if (!f2.exists()) {
+            f2.createNewFile();
+
+        }
+        if (f2.length() == 0) {
+            System.out.println("Il y a pas de produits dans le fichier veuillez les ajouter dans le choix 3");
+            return null;
+        }
+
+            FileInputStream fis = new FileInputStream("produits.dat");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            List<Object> produits2;
+            produits2 = (List)ois.readObject();
+            ois.close();
+            fis.close();
+
+
+
+        return produits;*/
+
+    }
+
+    public Produit findById(long id) {
+        //Produit pid = new Produit();
+        for (Produit p : produits) {
+            if (p.getId() == id) {
+                System.out.println(p);
+                return  p;
+            }
+        }
+        System.out.println("Ce produit n'existe pas");
+        return null;
+    }
+
+    public void delete(long id) {
+        for (Iterator<Produit> it = produits.iterator(); it.hasNext(); ) {
+            Produit p = it.next();
+            if (p.getId() == id) {
+                it.remove();
+            }
+
+
+        }
+    }
+
+    public void SaveAll() throws IOException {
+        File f1 = new File(nomFichier);
+        if (!f1.exists()) {
+            f1.createNewFile();
+        }
+
+        FileOutputStream fos = new FileOutputStream(f1);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        for (Produit p: produits) {
+            System.out.println(p);
+            oos.writeObject(p);
+        }
+        oos.close();
+        fos.close();
+        System.out.println("Produits sauvgardés");
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

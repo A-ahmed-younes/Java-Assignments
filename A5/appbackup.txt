@@ -1,0 +1,83 @@
+package presentation;
+import metier.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Application {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+        List<Produit> produitsG=new ArrayList<Produit>();
+        IMetier<Produit> imp = new MetierProduitImpl(produitsG,"produits.dat");
+
+        int choix;
+        Scanner sc = new Scanner(System.in);
+
+        do {
+            System.out.println("--------Menu de gestion des produits :--------");
+            System.out.println("1- Afficher la liste des produits");
+            System.out.println("2- Rechercher un produit par son id");
+            System.out.println("3- Ajouter un nouveau produit dans la liste");
+            System.out.println("4- Supprimer un produit par id");
+            System.out.println("5- Sauvegarder les produits");
+            System.out.println("6- Quitter le menu");
+            System.out.println("Veuillez entrer votre choix :");
+            choix = sc.nextInt();
+            sc.nextLine();
+
+            switch (choix) {
+                case 1:
+                    produitsG = imp.getAll();
+                    for(Produit p:produitsG){
+                        System.out.println(p.toString());
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("Entrer l'id de produit : ");
+                    long pid = sc.nextLong();
+                    sc.nextLine();
+                    imp.findById(pid);
+                    break;
+
+                case 3:
+                    System.out.println("entrer le nom du produit : ");
+                    String proNom = sc.nextLine();
+                    System.out.println("entrer la marque du produit : ");
+                    String proMarque = sc.nextLine();
+                    System.out.println("entrer la description du produit : ");
+                    String proDesc = sc.nextLine();
+                    System.out.println("entrer le prix du produit : ");
+                    float proPrix = sc.nextFloat();
+                    sc.nextLine();
+                    System.out.println("entrer la quantite en stock du produit : ");
+                    int proStock = sc.nextInt();
+                    imp.add(new Produit(proNom,proMarque,proDesc,proPrix,proStock));
+                    break;
+
+                case 4:
+                    System.out.println("Entrer l'id de produit a supprimer : ");
+                    long pSupp = sc.nextLong();
+                    imp.delete(pSupp);
+                    break;
+
+                case 5:
+                    imp.SaveAll();
+                    break;
+
+                case 6:
+                    System.out.println("-------Merci!-------");
+                    break;
+
+                default:
+                    System.out.println("choix non valide");
+
+
+
+
+            }
+        } while (choix != 6);
+    }
+}
